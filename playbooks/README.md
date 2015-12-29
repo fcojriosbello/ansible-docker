@@ -1,6 +1,3 @@
 
-Ansible Examples
-----------------
-
-This repository contains examples and best practices for building Ansible Playbooks.
-
+Deployment of a Nginx and Node.js based Stack
+------------------------------------------------
