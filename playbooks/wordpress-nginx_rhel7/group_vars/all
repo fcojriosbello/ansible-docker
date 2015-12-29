@@ -3,9 +3,23 @@
 wp_version: 4.3
 wp_sha256sum: 3b0db3abe8504f15a33cf64188a493ec0de01eaa8d20e37c3d6a1d9fa0a40fb4
 
+ghost:
+  domain_name: example.org
+  install_dir: /srv/ghost
+  user: ghost
+  repo_url: https://github.com/TryGhost/Ghost.git
+  listen_addr: 192.168.1.41
+  listen_port: 2368
+  mail:
+    transport: SMTP # or SES
+    smtp_service: ~ # or Mailgun
+    user: postmaster@example.org
+    pass: password
+
 # MySQL settings
 mysqlservice: mysqld
 mysql_port: 3306
+dbhost : 192.168.1.41
 
 # These are the WordPress database settings
 wp_db_name: wordpress
