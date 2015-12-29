@@ -1,0 +1,12 @@
+---
+
+- name: restart nginx
+  service: name=nginx state=restarted
+  
+# Restart the supervisor service itself, for loading new configuration
+- name: restart supervisor
+  service: name=supervisor state=restarted
+  
+# Restart the node instance (i.e. if reconfigured or new version installed)
+- name: restart ghost
+  supervisorctl: name=ghost state=restarted
