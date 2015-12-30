@@ -8,7 +8,7 @@ ghost:
   install_dir: /srv/ghost
   user: ghost
   repo_url: https://github.com/TryGhost/Ghost.git
-  listen_addr: 192.168.1.41
+  listen_addr: 127.0.0.1
   listen_port: 2368
   mail:
     transport: SMTP # or SES
