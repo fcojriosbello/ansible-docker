@@ -53,12 +53,18 @@
 - name: move to ghost folder and install dependencies
   command: chdir={{ ghost.install_dir }} npm install --production
 
+- name: Correct SElinux fault
+  command: sudo cat /var/log/audit/audit.log | grep nginx | grep denied | audit2allow -M mynginx; sudo semodule -i mynginx.pp
+
 - name: configure ghost
   template: src=roles/ghost/templates/config.js.j2 dest={{ ghost.install_dir }}/config.js
   notify: restart ghost
 
 - name: http service state
   service: name=nginx state=started
+
+- name: Keep Ghost running
+  command: chdir={{ ghost.install_dir }} node index &
 #configure nginx after been installed ghost
 #- name: disable default nginx virtualhost
 #  file: path=/etc/nginx/sites-enabled/default state=absent
