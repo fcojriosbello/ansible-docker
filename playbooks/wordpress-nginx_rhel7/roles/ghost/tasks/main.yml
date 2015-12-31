@@ -6,26 +6,6 @@
 - name: Install Npm
   yum: pkg=npm
 
-
-#- name: install dependencies
-#  yum: pkg={{ item }}
-#  with_items:
-#    - python-software-properties
-#    - python
-#    - python-pycurl
-#    - g++
-#    - make
-#    - git
-
-
-# Install Supervisord to keep an eye on forever
-#- name: install supervisor
-#  yum: pkg=supervisor
-
-#- name: configure supervisor
-#  template: src=roles/ghost/templates/ghost.supervisor.j2 dest=/etc/supervisor/conf.d/ghost.conf
-#  notify: restart supervisor
-
 # Setup Ghost
 - name: create ghost user
   user: name={{ ghost.user }} createhome=no shell=/bin/nologin
@@ -33,22 +13,14 @@
 - name: create ghost install dir
   file: path={{ ghost.install_dir }} state=directory owner={{ ghost.user }} group={{ ghost.user }}
 
-#- name: extract ghost release
-#  command: unzip -qod {{ ghost.install_dir }} /tmp/ghost_release.zip
 - name: Download Ghost
   get_url: url=http://ghost.org/zip/ghost-0.3.2.zip dest=/srv/ghost.zip
-
-#- name: Move archive
-#  command: chdir=/srv/ creates=/srv/ghost mv ghost.zip ghost/ghost.zip
 
 - name: Extract archive
   unarchive: src=/srv/ghost.zip dest=/srv/ghost copy=no
 
 - name: update ownership of ghost dir
   file: path={{ ghost.install_dir }} owner={{ ghost.user }} recurse=yes state=directory
-
-#- name: install node dependencies
-#  npm: path={{ ghost.install_dir }} production=yes
 
 - name: move to ghost folder and install dependencies
   command: chdir={{ ghost.install_dir }} npm install --production
@@ -59,21 +31,3 @@
 
 - name: http service state
   service: name=nginx state=started
-#configure nginx after been installed ghost
-#- name: disable default nginx virtualhost
-#  file: path=/etc/nginx/sites-enabled/default state=absent
-#- name: disable default nginx virtualhost
-#  command: chdir=/etc/nginx rm -rf sites-enabled/default
-
-#- name: install ghost virtualhost
-#  template: src=roles/ghost/templates/ghost.nginx.j2 dest=/etc/nginx/sites-available/ghost
-
-#- name: enable ghost virtualhost
-#  file: src=/etc/nginx/sites-available/ghost path=/etc/nginx/sites-enabled/ghost state=link
-#  notify: restart nginx
-# Setup webserver
-#- name: get nginx ppa
-#  apt_repository: repo=ppa:nginx/stable update_cache=yes
-
-#- name: install nginx
-#  apt: pkg=nginx
