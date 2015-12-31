@@ -6,8 +6,6 @@
 - name: Install Npm
   yum: pkg=npm
 
-<<<<<<< HEAD
-=======
 # Install Supervisord to keep an eye on forever
 - name: install supervisor
   yum: pkg=supervisor
@@ -15,7 +13,6 @@
 - name: configure supervisor
   template: src=roles/ghost/templates/ghost.supervisor.j2 dest=/etc/supervisord.d/ghost.ini
 
->>>>>>> complete
 # Setup Ghost
 - name: create ghost user
   user: name={{ ghost.user }} createhome=no shell=/bin/nologin
@@ -48,12 +45,10 @@
   tags:
     - init
     - supervisor
-    - supervisord  
+    - supervisord
 
 - name: http service state
   service: name=nginx state=started
-<<<<<<< HEAD
-=======
 
 - name: copy script to disable SElinux
   template: src=roles/ghost/templates/script.sh.j2 dest=/tmp/script.sh
@@ -64,7 +59,3 @@
 
 - name: Execute script
   script: roles/ghost/templates/script.sh
-
-#- name: Keep Ghost running
-#  command: chdir={{ ghost.install_dir }} node index
->>>>>>> complete
