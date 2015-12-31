@@ -1,13 +1,9 @@
-server {
-    server_name {{ ghost.domain_name }};
-    server_tokens off;
-
-    access_log /var/log/nginx/{{ ghost.domain_name }}.access.log;
-    error_log /var/log/nginx/{{ ghost.domain_name }}.error.log;
-
-    location / {
-        proxy_pass http://{{ ghost.listen_addr }}:{{ ghost.listen_port }};
-        proxy_set_header Host $host;
-        proxy_buffering off;
-    }
-}
+[program:ghost]
+command = node /srv/ghost/index.js
+directory = /srv/ghost
+user = ghost
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/ghost.log
+stderr_logfile = /var/log/supervisor/ghost_err.log
+environment = NODE_ENV="production"
