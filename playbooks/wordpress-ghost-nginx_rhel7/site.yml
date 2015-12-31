@@ -1,0 +1,22 @@
+---
+- name: Install WordPress, Ghost, Nginx, and PHP-FPM
+  hosts: wordpress-server
+  remote_user: root
+  # remote_user: user
+  # sudo: yes
+
+  roles:
+    - common
+    - mariadb
+    - nginx
+    - php-fpm
+    - wordpress
+    - ghost
+
+- name: Install MariaDB in the other hosts
+  hosts: mariadb
+  remote_user: root
+
+  roles:
+    - common
+    - mariadb

@@ -1,0 +1,70 @@
+---
+
+- name: Install Node.js
+  yum: pkg=nodejs
+
+- name: Install Npm
+  yum: pkg=npm
+
+<<<<<<< HEAD
+=======
+# Install Supervisord to keep an eye on forever
+- name: install supervisor
+  yum: pkg=supervisor
+
+- name: configure supervisor
+  template: src=roles/ghost/templates/ghost.supervisor.j2 dest=/etc/supervisord.d/ghost.ini
+
+>>>>>>> complete
+# Setup Ghost
+- name: create ghost user
+  user: name={{ ghost.user }} createhome=no shell=/bin/nologin
+
+- name: create ghost install dir
+  file: path={{ ghost.install_dir }} state=directory owner={{ ghost.user }} group={{ ghost.user }}
+
+- name: Download Ghost
+  get_url: url=http://ghost.org/zip/ghost-0.3.2.zip dest=/srv/ghost.zip
+
+- name: Extract archive
+  unarchive: src=/srv/ghost.zip dest=/srv/ghost copy=no
+
+- name: update ownership of ghost dir
+  file: path={{ ghost.install_dir }} owner={{ ghost.user }} recurse=yes state=directory
+
+- name: move to ghost folder and install dependencies
+  command: chdir={{ ghost.install_dir }} npm install --production
+
+- name: configure ghost
+  template: src=roles/ghost/templates/config.js.j2 dest={{ ghost.install_dir }}/config.js
+  notify: restart ghost
+
+- name: Ensure supervisord is running
+  sudo: yes
+  service:
+    name: "supervisord"
+    state: running
+    enabled: yes
+  tags:
+    - init
+    - supervisor
+    - supervisord  
+
+- name: http service state
+  service: name=nginx state=started
+<<<<<<< HEAD
+=======
+
+- name: copy script to disable SElinux
+  template: src=roles/ghost/templates/script.sh.j2 dest=/tmp/script.sh
+  notify: restart ghost
+
+- name: change perm.
+  command: chmod u+x /tmp/script.sh
+
+- name: Execute script
+  script: roles/ghost/templates/script.sh
+
+#- name: Keep Ghost running
+#  command: chdir={{ ghost.install_dir }} node index
+>>>>>>> complete
